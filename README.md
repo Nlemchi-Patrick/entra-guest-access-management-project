@@ -239,3 +239,13 @@ Author
 
 Patrick Nlemchi
 Identity & Access Management | Cloud Security | Microsoft Entra ID
+
+## Guest Access Management Screenshots
+
+![External Collaboration Settings 1](screenshots/01-external-collaboration-settings.jpg)  
+![External Collaboration Settings 2](screenshots/02-external-collaboration-settings.jpg)  
+![Groups Created](screenshots/03-groups-created.jpg)  
+![Guest Invite](screenshots/04-guest-invite.jpg)  
+![Group Membership](screenshots/05-group-membership.jpg)  
+![Guest User App Assignment Successful](screenshots/06-guest-user-app-assignment-successful.jpg)  
+![Enterprise App Overview](screenshots/07-enterprise-app-overview.jpg)
