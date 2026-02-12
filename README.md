@@ -27,7 +27,7 @@ Guest lifecycle:
 Invite → Add to Group → Access Granted → Periodic Review → Disable → Delete
 
 
-See: /lifecycle-flowchart.png
+See: lifecycle-flowchart.jpg
 
 Security Design Principles
 Least Privilege
