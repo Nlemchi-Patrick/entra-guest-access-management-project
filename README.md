@@ -33,14 +33,11 @@ The design follows Zero Trust and least-privilege principles commonly implemente
 
 ## Architecture Design (Target / Production Model)
 
-
-
 Guest User
 ↓
 Security Group (RBAC)
 ↓
 Enterprise Application Access
-
 
 This model ensures:
 
@@ -51,7 +48,7 @@ This model ensures:
 
 See:
 
-/diagrams/guest-lifecycle-flowchart.jpg
+/diagrams/guest-lifecycle-flowchart.png
 
 ---
 
