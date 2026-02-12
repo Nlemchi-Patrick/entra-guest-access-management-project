@@ -1,79 +1,78 @@
 External (Guest) User Access Management
-Microsoft Entra ID (Azure AD) – B2B Identity Governance Project
+Microsoft Entra ID (Azure AD) B2B Identity Governance Project
 Overview
 
-This project demonstrates a secure, enterprise-style approach to managing external (guest) users in Microsoft Entra ID using the Free tier.
+This project demonstrates secure onboarding, authorization, and lifecycle governance of external (guest) users using Microsoft Entra ID (Free).
 
-It implements controlled onboarding, least-privilege authorization, and lifecycle governance for vendors and contractors — reducing identity risk while maintaining operational efficiency.
+It implements a least-privilege access model with directory restrictions and operational controls to mitigate common vendor and contractor access risks.
 
-The solution models real-world IAM practices used in consulting and large enterprises.
+The design follows enterprise IAM and Zero Trust principles and mirrors real-world production practices used by consulting firms and large organizations.
 
-Key Capabilities
+Objectives
 
-B2B guest invitations
+Enable secure B2B collaboration
 
-RBAC-based access using security groups
+Enforce least privilege access
 
-Enterprise application authorization
+Prevent directory reconnaissance by guests
 
-Directory visibility restrictions
+Govern guest lifecycle (invite → review → disable → remove)
 
-Guest lifecycle governance
+Demonstrate operational automation with PowerShell
 
-Automated stale account cleanup (PowerShell)
+Architecture
 
-Risk and control documentation
+Guest lifecycle:
 
-Architecture Model
-Guest User
-   ↓
-Security Group (RBAC)
-   ↓
-Enterprise Application / Resource Access
+Invite → Add to Group → Access Granted → Periodic Review → Disable → Delete
 
-Design Benefits
 
-Centralized authorization
+See: /lifecycle-flowchart.png
 
-Scalable access management
+Security Design Principles
+Least Privilege
 
-Easier audits and reviews
+Guests only receive access required for their specific task or application.
 
-Reduced manual assignments
+Identity Boundary Protection
 
-Supports least privilege and Zero Trust
+Guest directory visibility restricted to prevent tenant enumeration.
 
-Lifecycle diagram:
-/diagrams/guest-lifecycle-flowchart.png
+Lifecycle Governance
 
-Licensing Note (Important)
+Inactive accounts are reviewed and disabled automatically.
 
-Microsoft Entra ID Free does not allow group assignment to Enterprise Applications.
+Zero Trust Mindset
 
-Because of this:
+Every external identity is treated as untrusted until explicitly authorized.
 
-Direct user assignments are used for demonstration
+Entra ID Free Licensing Note
 
-Security groups are still created to model proper RBAC design
+Microsoft Entra ID Free does not support group assignment to Enterprise Applications.
 
-In production (P1/P2), groups would be assigned directly
+Direct user assignment is used for demonstration purposes.
 
-This preserves correct architecture while remaining Free-tier compatible.
+Security groups are created for design clarity and RBAC planning.
 
-Implementation Walkthrough
-1. External Collaboration Security
+In production environments (P1/P2), groups would be used to enforce least-privilege access at scale.
+
+Implementation Steps
+1. Configure External Collaboration Settings
+
+Path:
+Entra ID → External Identities → External collaboration settings
 
 Configured:
 
-Admin-only guest invitations
+Invitations restricted to admins/guest inviters
 
-Restricted guest directory visibility
+Guest directory visibility = most restrictive
 
-Optional domain restrictions
+Optional domain restrictions enabled
 
-2. Security Groups (RBAC Segmentation)
+2. Create Security Groups
 
-Created:
+Examples:
 
 Guest-App-Access
 
@@ -82,167 +81,159 @@ Guest-SharePoint-Access
 Guest-Temporary-Contractors
 
 Purpose:
+Segment access and enforce least-privilege design.
 
-Enforce least privilege
+3. Invite Guest Users
 
-Separate access by business function
+Path:
+Users → New user → Invite external user
 
-Simplify audits and removal
+Guests are added to the required security groups for governance tracking.
 
-3. Guest Onboarding Process
+4. Assign Resource Access
 
-Invite external user
+Access granted to users for:
 
-Assign to appropriate security group
+Enterprise Applications
 
-Grant application/resource access
+SharePoint sites
 
-Document ownership
+SaaS integrations
 
-4. Lifecycle Governance
+Direct assignments are used due to Free-tier limitations.
 
-Periodic access reviews
+5. Lifecycle Management
 
-Remove inactive users
+Periodic review process:
 
-Disable expired contractors
+Identify inactive accounts
 
-Maintain minimal attack surface
+Disable unused access
 
-5. Automation
+Remove completed vendors
 
-PowerShell automation provided:
-
-scripts/guest-cleanup.ps1
-
-Functions:
-
-Detects inactive guest accounts
-
-Disables accounts after 90+ days
-
-Reduces stale identity risk
+Automation provided via PowerShell cleanup script.
 
 Project Structure
 entra-guest-access-management/
 │
-├── README.md                    → Project overview
-├── docs/
-│   ├── guest-access-policy.md   → Governance standards
-│   ├── risk-mitigation.md       → Risks and controls
-│   └── licensing-considerations.md
-│
-├── diagrams/
-│   └── guest-lifecycle-flowchart.png
-│
+├── README.md
+├── guest-access-policy.md
+├── risk-mitigation.md
+├── lifecycle-flowchart.png
 ├── scripts/
 │   └── guest-cleanup.ps1
-│
 └── screenshots/
-    → Portal configuration evidence
 
 Documentation
 guest-access-policy.md
 
 Defines:
 
-Invitation standards
+Invitation rules
 
-Access assignment model
+Authorization standards
 
-Ownership and governance
+Lifecycle controls
 
-Lifecycle procedures
+Ownership
 
 risk-mitigation.md
 
-Maps:
+Identifies:
 
-Threats
+Key risks
 
-Controls
+Implemented controls
 
 Security outcomes
 
 licensing-considerations.md
 
-Explains:
+Explains Free-tier limitations and P1/P2 architecture adjustments.
 
-Free vs Premium differences
+Automation
+guest-cleanup.ps1
 
-Architecture trade-offs
+Purpose: Disable guest accounts inactive for 90+ days.
+
+Example:
+
+Connect-MgGraph -Scopes "User.ReadWrite.All"
+Get-MgUser -Filter "userType eq 'Guest'"
+
+
+Enforces continuous governance and reduces stale-account risk.
 
 Evidence (Screenshots)
 
-The /screenshots folder includes:
+The /screenshots folder contains:
 
 External collaboration settings
 
-Security groups
+Security groups created
 
-Guest invitations
+Guest invitation
 
-Group memberships
+Group membership
 
-App assignments
+App assignment
 
-Guest review configuration
+Guest directory listing
 
-These provide proof of implementation.
+These validate the configuration steps and operational controls.
 
 Risks Addressed
 Risk	Mitigation
-Unauthorized vendor access	Admin-controlled invitations
-Excess privileges	Group-based RBAC
+Unauthorized vendor access	Admin-only invitations
+Excess permissions	RBAC planning & tracking
 Directory reconnaissance	Restricted visibility
-Stale accounts	Automated cleanup
-Manual errors	Centralized authorization
+Stale accounts	Reviews + automation
+Data leakage	Least-privilege access model
 Skills Demonstrated
 
 Microsoft Entra ID administration
 
-B2B guest identity management
+B2B guest management
 
-RBAC design
+Identity governance
 
-IAM governance
-
-Zero Trust principles
+Zero Trust architecture
 
 PowerShell automation
 
-Technical documentation
+Security documentation
 
-Business Relevance
+Employer Relevance
 
-This solution reflects responsibilities common in:
+This project mirrors real enterprise IAM responsibilities:
 
-Consulting firms
+Vendor onboarding
 
-Large enterprises
+Contractor access control
 
-Financial services
+Third-party risk reduction
 
-Healthcare
+Identity boundary enforcement
 
-SaaS/technology companies
+Compliance readiness
 
-It demonstrates practical identity boundary management and third-party risk reduction.
+Commonly required by consulting firms, financial institutions, healthcare organizations, large enterprises, and SaaS/technology companies.
 
-Getting Started
-git clone https://github.com/<username>/entra-guest-access-management-project.git
-cd entra-guest-access-management-project
+How to Run Locally
+git clone <repo>
+cd entra-guest-access-management
 
 
 Review:
 
-documentation
+Documentation
 
-diagrams
+Scripts
 
-scripts
+Screenshots
 
-screenshots
+Diagrams
 
 Author
 
